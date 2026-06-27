@@ -7,7 +7,7 @@ import { useTheme } from 'next-themes';
 import { signOut, useSession } from 'next-auth/react';
 import { 
   Users, User, MessageSquare, Shield, CreditCard, 
-  LogOut, Sun, Moon, Sparkles, Bell, Heart
+  LogOut, Sun, Moon, Sparkles, Bell, Heart, Search
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navItems = [
     { name: 'Overview', href: '/overview', icon: Users },
     { name: 'Discovery', href: '/dashboard', icon: Sparkles },
+    { name: 'Advanced Search', href: '/search', icon: Search },
     { name: 'My Matches', href: '/matches', icon: Heart },
     { name: 'Messages', href: '/messages', icon: MessageSquare },
     { name: 'My Profile', href: '/profile', icon: User },
