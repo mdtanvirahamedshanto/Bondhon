@@ -3,8 +3,7 @@
 import { connectToDatabase } from '@/core/database/connect';
 import { MessageModel } from '@/core/models/Message.model';
 import { NotificationModel } from '@/core/models/Notification.model';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/core/auth/auth.config';
+import { auth } from '@/core/auth/auth.config';
 import { revalidatePath } from 'next/cache';
 
 export async function getConversationHistory(matchId: string) {
@@ -27,7 +26,7 @@ export async function getConversationHistory(matchId: string) {
 
 export async function sendMessage(matchId: string, content: string) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return { success: false, message: 'Unauthorized. Please log in.' };
     }

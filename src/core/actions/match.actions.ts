@@ -3,8 +3,7 @@
 import { connectToDatabase } from '@/core/database/connect';
 import { ProfileModel } from '@/core/models/Profile.model';
 import { MatchModel } from '@/core/models/Match.model';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/core/auth/auth.config';
+import { auth } from '@/core/auth/auth.config';
 import { revalidatePath } from 'next/cache';
 
 export async function getDiscoveryFeed(filters: {
@@ -93,7 +92,7 @@ export async function getDiscoveryFeed(filters: {
 
 export async function expressInterest(profileId: string, action: 'like' | 'pass') {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return { success: false, message: 'Unauthorized. Please log in.' };
     }

@@ -2,13 +2,12 @@
 
 import { connectToDatabase } from '@/core/database/connect';
 import { ProfileModel } from '@/core/models/Profile.model';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/core/auth/auth.config';
+import { auth } from '@/core/auth/auth.config';
 import { revalidatePath } from 'next/cache';
 
 export async function updateProfileGeneralInfo(prevState: any, formData: FormData) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return { success: false, message: 'Unauthorized. Please log in.' };
     }
@@ -43,7 +42,7 @@ export async function updateProfileGeneralInfo(prevState: any, formData: FormDat
 
 export async function updatePrivacySettings(prevState: any, formData: FormData) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return { success: false, message: 'Unauthorized. Please log in.' };
     }

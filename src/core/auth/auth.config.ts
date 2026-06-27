@@ -1,13 +1,13 @@
-import { NextAuthOptions } from 'next-auth';
+import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectToDatabase } from '@/core/database/connect';
 import { UserModel } from '@/core/models/User.model';
 import { CONFIG } from '@/constants/config';
 
-export const authOptions: NextAuthOptions = {
+export const authOptions = {
   secret: CONFIG.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt' as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
 
         await connectToDatabase();
 
-        const user = await UserModel.findOne({ email: credentials.email.toLowerCase() }).select('+passwordHash');
+        const user = await UserModel.findOne({ email: (credentials.email as string).toLowerCase() }).select('+passwordHash');
         if (!user) {
           throw new Error('Invalid email or password');
         }
@@ -55,19 +55,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }: any) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
-        token.isVerified = (user as any).isVerified;
-        token.subscriptionTier = (user as any).subscriptionTier;
+        token.role = user.role;
+        token.isVerified = user.isVerified;
+        token.subscriptionTier = user.subscriptionTier;
       }
       if (trigger === 'update' && session) {
         token.subscriptionTier = session.subscriptionTier ?? token.subscriptionTier;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (token && session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role;
@@ -78,3 +78,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

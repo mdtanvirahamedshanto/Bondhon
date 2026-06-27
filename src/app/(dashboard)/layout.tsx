@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { name: 'Subscription', href: '/subscription', icon: CreditCard },
   ];
 
-  if (session?.user?.role === 'admin') {
+  if ((session?.user as any)?.role === 'admin') {
     navItems.push({ name: 'Admin Portal', href: '/admin', icon: Shield });
   }
 
