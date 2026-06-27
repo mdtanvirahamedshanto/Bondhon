@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useActionState, useEffect, useState } from 'react';
+import React, { useActionState, useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { confirmPaymentTransaction } from '@/core/actions/subscription.actions';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, CheckCircle, CreditCard, Lock, Sparkles } from 'lucide-react';
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const plan = searchParams?.get('plan') || 'premium';
@@ -131,5 +131,13 @@ export default function CheckoutPage() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-zinc-500 font-semibold">Loading Secure Checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

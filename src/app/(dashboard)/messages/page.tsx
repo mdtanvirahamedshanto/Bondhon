@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getConversationHistory, sendMessage } from '@/core/actions/message.actions';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Send, Search, Sparkles, Star } from 'lucide-react';
 
-export default function MessagesPage() {
+function MessagesContent() {
   const searchParams = useSearchParams();
   const selectedUserId = searchParams?.get('userId') || 'prof_1';
 
@@ -122,5 +122,13 @@ export default function MessagesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-zinc-500 font-semibold">Loading Messages...</div>}>
+      <MessagesContent />
+    </Suspense>
   );
 }
